@@ -1,1 +1,59 @@
-<h1>Hello World</h1>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Precios de Acciones</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .stock {
+            display: inline-block;
+            background: white;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 { color: #333; }
+        p { font-size: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Precios de Acciones</h1>
+    <div class="container">
+        <div class="stock" id="AAPL">Apple (AAPL): <p>-</p></div>
+        <div class="stock" id="AMZN">Amazon (AMZN): <p>-</p></div>
+        <div class="stock" id="TSLA">Tesla (TSLA): <p>-</p></div>
+        <div class="stock" id="MSFT">Microsoft (MSFT): <p>-</p></div>
+    </div>
+
+    <script>
+        const apiKey = A89S4BWKIX3NWZM1;  // Reemplaza con tu clave de Alpha Vantage
+        const stocks = ['AAPL', 'AMZN', 'TSLA', 'MSFT'];
+
+        async function fetchStockPrices() {
+            for (let stock of stocks) {
+                try {
+                    let response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${stock}&apikey=${apiKey}`);
+                    let data = await response.json();
+                    let price = data["Global Quote"]["05. price"];
+                    document.querySelector(`#${stock} p`).textContent = `$${parseFloat(price).toFixed(2)}`;
+                } catch (error) {
+                    console.error(`Error obteniendo ${stock}:`, error);
+                }
+            }
+        }
+
+        fetchStockPrices();
+        setInterval(fetchStockPrices, 30000); // Actualiza cada 30 segundos
+    </script>
+</body>
+</html>
+
